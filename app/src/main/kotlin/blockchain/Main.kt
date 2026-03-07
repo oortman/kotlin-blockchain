@@ -6,4 +6,5 @@ fun main() {
 
     Blockchain.chain.forEach { println(it) }
     Blockchain.chain.forEach { println(it.hash) }
+    println(Blockchain.isValid())
 }
