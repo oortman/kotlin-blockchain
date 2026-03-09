@@ -1,23 +1,27 @@
 package blockchain
 
+import kotlin.collections.mutableListOf
+
 object Blockchain {
     val chain = mutableListOf<Block>()
+    const val MAX_TRANSACTIONS_PER_BLOCK = 10
 
     init {
         // Genesis block has no predecessor; "0" is a conventional sentinel
         chain.add(Block(0, System.currentTimeMillis(), emptyList(), "0"))
     }
 
-    fun addBlock(transactions: MutableList<Transaction>, minerAddress: String) {
+    fun addBlock(minerAddress: String) {
+        val transactions = mutableListOf<Transaction>()
+        transactions.addAll(Mempool.pull(MAX_TRANSACTIONS_PER_BLOCK))
         transactions.add(Transaction(Transaction.COINBASE, minerAddress, 50.0))
 
-        val validTransactions = transactions.filter { hasSufficientFunds(it) }
         val previousBlock = chain.last()
         val newBlock =
                 Block(
                         previousBlock.index + 1,
                         System.currentTimeMillis(),
-                        validTransactions,
+                        transactions,
                         previousBlock.hash
                 )
 
