@@ -9,12 +9,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun WalletPanel(viewModel: AppViewModel) {
-    Column {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Button(onClick = { viewModel.createWallet() }) {
             Text("Create Wallet")
         }
 
-        LazyColumn {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             itemsIndexed(viewModel.wallets) { index, wallet ->
                 Card(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
