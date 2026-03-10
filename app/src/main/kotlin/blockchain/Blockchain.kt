@@ -12,17 +12,15 @@ class Blockchain {
 
     fun addBlock(transactions: List<Transaction>, minerAddress: String) {
         val allTransactions = transactions + Transaction(Transaction.COINBASE, minerAddress, 50.0)
-
         val previousBlock = chain.last()
-        val newBlock =
-                Block(
-                        previousBlock.index + 1,
-                        System.currentTimeMillis(),
-                        allTransactions,
-                        previousBlock.hash
-                )
+        val newBlock = Block(
+            previousBlock.index + 1,
+            System.currentTimeMillis(),
+            allTransactions,
+            previousBlock.hash
+        )
 
-        chain.add(newBlock.mine(4))
+        chain.add(newBlock.mine(5))
     }
 
     fun getBalance(address: String): Double {
@@ -34,29 +32,25 @@ class Blockchain {
     }
 
     fun hasSufficientFunds(transaction: Transaction): Boolean {
-        return (transaction.sender == Transaction.COINBASE) ||
-                (getBalance(transaction.sender) >= transaction.amount)
+        return (transaction.sender == Transaction.COINBASE) || (getBalance(transaction.sender) >= transaction.amount)
     }
 
     fun isValid(): Boolean {
-        val validHashes =
-                chain.all {
-                    it.hash ==
-                            Block.computeHash(
-                                    it.nonce,
-                                    it.index,
-                                    it.timestamp,
-                                    it.transactions,
-                                    it.previousHash
-                            )
-                }
+        val validHashes = chain.all {
+            it.hash == Block.computeHash(
+                it.nonce,
+                it.index,
+                it.timestamp,
+                it.transactions,
+                it.previousHash
+            )
+        }
         val validLinks = chain.zipWithNext().all { it.second.previousHash == it.first.hash }
-        val validSignatures =
-                chain.all { block ->
-                    block.transactions.all {
-                        it.sender == Transaction.COINBASE || Wallet.verify(it)
-                    }
-                }
+        val validSignatures = chain.all { block ->
+            block.transactions.all {
+                it.sender == Transaction.COINBASE || Wallet.verify(it)
+            }
+        }
 
         return validHashes && validLinks && validSignatures
     }

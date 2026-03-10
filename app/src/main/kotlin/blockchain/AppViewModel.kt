@@ -2,6 +2,7 @@ package blockchain
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.*
 
 class AppViewModel {
     val blockchain = Blockchain()
@@ -31,9 +32,12 @@ class AppViewModel {
     }
 
     suspend fun mineBlock(miner: Wallet) {
+        isMining.value = true
+
         try {
-            isMining.value = true
-            blockchain.addBlock(mempool.pull(10), miner.publicKeyString)
+            withContext(Dispatchers.Default) {
+                blockchain.addBlock(mempool.pull(10), miner.publicKeyString)
+            }
         } finally {
             isMining.value = false
         }

@@ -34,8 +34,8 @@ fun WalletPanel(viewModel: AppViewModel) {
                                     MaterialTheme.typography.subtitle1
                             )
                             Text(
-                                wallet.publicKeyString.take(12) + "...", style =
-                                    MaterialTheme.typography.caption
+                                formatAddress(wallet.publicKeyString),
+                                style = MaterialTheme.typography.caption
                             )
                             Text(
                                 "Balance: ${viewModel.blockchain.getBalance(wallet.publicKeyString)}", style =

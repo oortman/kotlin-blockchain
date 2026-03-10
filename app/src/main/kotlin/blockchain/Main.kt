@@ -59,7 +59,7 @@ fun main() = application {
                         "wallets" -> WalletPanel(viewModel)
                         "explorer" -> Text("Explorer coming soon")
                         "send" -> Text("Send coming soon")
-                        "mine" -> Text("Mine coming soon")
+                        "mine" -> MinePanel(viewModel)
                     }
 
                 }
