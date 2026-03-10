@@ -63,4 +63,9 @@ object Blockchain {
 
         return validHashes && validLinks && validSignatures
     }
+
+    fun reset() {
+        chain.clear()
+        chain.add(Block(0, System.currentTimeMillis(), emptyList(), "0"))
+    }
 }

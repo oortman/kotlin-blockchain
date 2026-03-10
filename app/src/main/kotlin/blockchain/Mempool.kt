@@ -21,4 +21,8 @@ object Mempool {
 
         return pulledTransactions
     }
+
+    fun reset() {
+        pending.clear()
+    }
 }
