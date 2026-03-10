@@ -7,34 +7,37 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class MempoolTest {
+    private lateinit var blockchain: Blockchain
+    private lateinit var mempool: Mempool
+
     @BeforeTest
     fun setup() {
-        Blockchain.reset()
-        Mempool.reset()
+        blockchain = Blockchain()
+        mempool = Mempool(blockchain)
     }
 
     @Test
     fun `submitting a valid signed transaction adds it to pending`() {
         val wallet1 = Wallet()
         val wallet2 = Wallet()
-        Blockchain.addBlock(wallet1.publicKeyString)
+        blockchain.addBlock(mutableListOf(), wallet1.publicKeyString)
 
         val tx = wallet1.sign(
             Transaction(wallet1.publicKeyString, wallet2.publicKeyString, 5.0)
         )
-        Mempool.submit(tx)
-        assertEquals(1, Mempool.pending.size)
+        mempool.submit(tx)
+        assertEquals(1, mempool.pending.size)
     }
 
     @Test
     fun `submitting an unsigned transaction throws`() {
         val wallet1 = Wallet()
         val wallet2 = Wallet()
-        Blockchain.addBlock(wallet1.publicKeyString)
+        blockchain.addBlock(mutableListOf(), wallet1.publicKeyString)
 
         val tx = Transaction(wallet1.publicKeyString, wallet2.publicKeyString, 5.0)
         assertFailsWith<IllegalArgumentException> {
-            Mempool.submit(tx)
+            mempool.submit(tx)
         }
     }
 
@@ -47,7 +50,7 @@ class MempoolTest {
             Transaction(wallet1.publicKeyString, wallet2.publicKeyString, 100.0)
         )
         assertFailsWith<IllegalArgumentException> {
-            Mempool.submit(tx)
+            mempool.submit(tx)
         }
     }
 
@@ -55,7 +58,7 @@ class MempoolTest {
     fun `pull returns and removes transactions from queue`() {
         val wallet1 = Wallet()
         val wallet2 = Wallet()
-        Blockchain.addBlock(wallet1.publicKeyString)
+        blockchain.addBlock(mutableListOf(), wallet1.publicKeyString)
 
         val tx1 = wallet1.sign(
             Transaction(wallet1.publicKeyString, wallet2.publicKeyString, 1.0)
@@ -63,34 +66,34 @@ class MempoolTest {
         val tx2 = wallet1.sign(
             Transaction(wallet1.publicKeyString, wallet2.publicKeyString, 2.0)
         )
-        Mempool.submit(tx1)
-        Mempool.submit(tx2)
+        mempool.submit(tx1)
+        mempool.submit(tx2)
 
-        val pulled = Mempool.pull(1)
+        val pulled = mempool.pull(1)
         assertEquals(1, pulled.size)
         assertEquals(1.0, pulled[0].amount)
-        assertEquals(1, Mempool.pending.size)
+        assertEquals(1, mempool.pending.size)
     }
 
     @Test
     fun `pull with max greater than pending size does not crash`() {
         val wallet1 = Wallet()
         val wallet2 = Wallet()
-        Blockchain.addBlock(wallet1.publicKeyString)
+        blockchain.addBlock(mutableListOf(), wallet1.publicKeyString)
 
         val tx = wallet1.sign(
             Transaction(wallet1.publicKeyString, wallet2.publicKeyString, 1.0)
         )
-        Mempool.submit(tx)
+        mempool.submit(tx)
 
-        val pulled = Mempool.pull(100)
+        val pulled = mempool.pull(100)
         assertEquals(1, pulled.size)
-        assertTrue(Mempool.pending.isEmpty())
+        assertTrue(mempool.pending.isEmpty())
     }
 
     @Test
     fun `pull from empty mempool returns empty list`() {
-        val pulled = Mempool.pull(10)
+        val pulled = mempool.pull(10)
         assertTrue(pulled.isEmpty())
     }
 }

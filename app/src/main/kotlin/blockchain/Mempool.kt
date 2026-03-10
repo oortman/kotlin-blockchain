@@ -1,12 +1,12 @@
 package blockchain
 
-object Mempool {
+class Mempool(private val blockchain: Blockchain) {
     val pending: ArrayDeque<Transaction> = ArrayDeque(0)
 
     fun submit(transaction: Transaction) {
         require(transaction.signature != null)
         require(Wallet.verify(transaction))
-        require(Blockchain.hasSufficientFunds(transaction))
+        require(blockchain.hasSufficientFunds(transaction))
 
         pending.addLast(transaction)
     }
@@ -20,9 +20,5 @@ object Mempool {
         }
 
         return pulledTransactions
-    }
-
-    fun reset() {
-        pending.clear()
     }
 }
