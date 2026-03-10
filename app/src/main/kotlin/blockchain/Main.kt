@@ -19,27 +19,48 @@ fun main() = application {
         MaterialTheme {
             Row(modifier = Modifier.fillMaxSize()) {
                 // Left sidebar
-                Column(modifier = Modifier.width(200.dp).fillMaxHeight().padding(8.dp)) {
+                Column(
+                    modifier = Modifier.width(200.dp).fillMaxHeight().padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                     // Navigation
-                    Button(onClick = { currentPanel = "wallets" }) {
+                    Button(
+                        onClick = { currentPanel = "wallets" },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         Text("Wallets")
                     }
 
-                    Button(onClick = { currentPanel = "explorer" }) {
+                    Button(
+                        onClick = { currentPanel = "explorer" },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         Text("Explorer")
                     }
 
-                    Button(onClick = { currentPanel = "send" }) {
+                    Button(
+                        onClick = { currentPanel = "send" },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         Text("Send")
                     }
 
-                    Button(onClick = { currentPanel = "mine" }) {
+                    Button(
+                        onClick = { currentPanel = "mine" },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         Text("Mine")
                     }
                 }
 
                 // Right content area
                 Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                    when (currentPanel) {
+                        "wallets" -> WalletPanel(viewModel)
+                        "explorer" -> Text("Explorer coming soon")
+                        "send" -> Text("Send coming soon")
+                        "mine" -> Text("Mine coming soon")
+                    }
 
                 }
             }

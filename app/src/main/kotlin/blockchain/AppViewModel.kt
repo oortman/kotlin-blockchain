@@ -8,9 +8,8 @@ class AppViewModel {
     val mempool = Mempool(blockchain)
     val wallets = mutableStateListOf<Wallet>()
     val errorMessage = mutableStateOf<String?>(null)
-
-    var selectedWallet = mutableStateOf<Wallet?>(null)
-    var isMining = mutableStateOf(false)
+    val selectedWallet = mutableStateOf<Wallet?>(null)
+    val isMining = mutableStateOf(false)
 
     fun createWallet() {
         val newWallet = Wallet()
