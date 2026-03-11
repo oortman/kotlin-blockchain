@@ -21,13 +21,22 @@ class AppViewModel {
         }
     }
 
-    fun submitTransaction(sender: Wallet, recipient: String, amount: Double) {
-        val transaction = sender.sign(Transaction(sender.publicKeyString, recipient, amount))
+    fun submitTransaction(sender: Wallet, recipient: String, amount: Double): Boolean {
+        errorMessage.value = null
 
-        try {
-            mempool.submit(transaction)
+        return try {
+            mempool.submit(
+                sender.sign(
+                    Transaction(
+                        sender.publicKeyString,
+                        recipient, amount
+                    )
+                )
+            )
+            true
         } catch (e: Exception) {
             errorMessage.value = e.message
+            false
         }
     }
 

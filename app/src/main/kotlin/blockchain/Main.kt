@@ -40,7 +40,7 @@ fun main() = application {
                     when (currentPanel) {
                         Panel.Wallets -> WalletPanel(viewModel)
                         Panel.Explorer -> Text("Explorer coming soon")
-                        Panel.Send -> Text("Send coming soon")
+                        Panel.Send -> SendPanel(viewModel)
                         Panel.Mine -> MinePanel(viewModel)
                     }
 
