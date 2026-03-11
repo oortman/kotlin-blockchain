@@ -1,6 +1,8 @@
 package blockchain
 
 fun formatAddress(address: String): String {
+    if (address.length < 16)
+        return address
     return "${address.take(4)} ${address.substring(4, 8)}...${
         address.substring(
             address.length - 8,

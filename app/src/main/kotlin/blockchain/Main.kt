@@ -39,7 +39,7 @@ fun main() = application {
                 Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
                     when (currentPanel) {
                         Panel.Wallets -> WalletPanel(viewModel)
-                        Panel.Explorer -> Text("Explorer coming soon")
+                        Panel.Explorer -> ExplorerPanel(viewModel)
                         Panel.Send -> SendPanel(viewModel)
                         Panel.Mine -> MinePanel(viewModel)
                     }
